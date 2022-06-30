@@ -25,8 +25,7 @@ phases:
 
       - echo Installing source npm dependencies ...
       - npm ci
-      - echo Running unit tests ...
-      - CI=true npm run test
+
   build:
     commands:
       - echo Starting build ...
