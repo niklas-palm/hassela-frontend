@@ -5,6 +5,9 @@ import {
   Grid,
   Card,
   Loading,
+  Page,
+  Divider,
+  Spacer,
 } from "@geist-ui/core";
 import { Amplify } from "aws-amplify";
 import {
@@ -39,9 +42,7 @@ const App = () => {
 
   useEffect(() => {
     const getStreams = async () => {
-      // Get stream URLs here
       let res = await getUrls();
-      console.log(res.streams);
       setStreams(res.streams);
     };
     getStreams();
@@ -53,15 +54,13 @@ const App = () => {
       return streams.map((stream) => {
         return (
           <Grid xs={24} md={12} key={stream}>
-            <Card width="100%" height="auto">
-              <ReactHlsPlayer
-                src={stream}
-                autoPlay={true}
-                controls={true}
-                width="100%"
-                height="auto"
-              />
-            </Card>
+            <ReactHlsPlayer
+              src={stream}
+              autoPlay={true}
+              controls={true}
+              width="100%"
+              height="auto"
+            />
           </Grid>
         );
       });
@@ -89,9 +88,20 @@ const App = () => {
   return authState === AuthState.SignedIn && user ? (
     <GeistProvider>
       <CssBaseline />
-      <Grid.Container gap={2} justify="center">
-        {renderStreams()}
-      </Grid.Container>
+      <Page>
+        <Page.Header center>
+          <h2>Hassela</h2>
+        </Page.Header>
+        <Page.Content>
+          <Divider h={1} type="secondary">
+            Live streams
+          </Divider>
+          <Spacer h={2} />
+          <Grid.Container gap={2} justify="center">
+            {renderStreams()}
+          </Grid.Container>
+        </Page.Content>
+      </Page>
     </GeistProvider>
   ) : (
     <AmplifyAuthenticator>
