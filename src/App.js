@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { GeistProvider, CssBaseline, Grid, Card } from "@geist-ui/core";
-import { Amplify, Auth } from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import {
   AmplifyAuthenticator,
   // AmplifySignOut, // use as component to add signout capabilties.
@@ -17,7 +17,16 @@ import { getUrls } from "./utils/requests";
 
 import "./App.scss";
 
-const renderStreams = (streams) => {
+const renderStreams = (streams, loading) => {
+  if (!streams && !loading) {
+    return (
+      <Grid xs={24} md={12}>
+        <Card width="100%" height="auto">
+          <p>No stream currently available. Try refreshing in a bit</p>
+        </Card>
+      </Grid>
+    );
+  }
   return streams.map((stream) => {
     return (
       <Grid xs={24} md={12} key={stream}>
@@ -38,7 +47,8 @@ const renderStreams = (streams) => {
 Amplify.configure(awsconfig);
 
 const App = () => {
-  const [streams, setStreams] = useState([]);
+  const [streams, setStreams] = useState();
+  const [loading, setLoading] = useState(true);
   const [authState, setAuthState] = useState();
   const [user, setUser] = useState();
 
@@ -46,6 +56,7 @@ const App = () => {
     onAuthUIStateChange((nextAuthState, authData) => {
       setAuthState(nextAuthState);
       setUser(authData);
+      setLoading(false);
     });
   }, []);
 
@@ -53,6 +64,7 @@ const App = () => {
     const getStreams = async () => {
       // Get stream URLs here
       let res = await getUrls();
+      console.log(res.streams);
       setStreams(res.streams);
     };
     getStreams();
@@ -62,7 +74,7 @@ const App = () => {
     <GeistProvider>
       <CssBaseline />
       <Grid.Container gap={2} justify="center">
-        {streams && renderStreams(streams)}
+        {!loading && renderStreams(streams, loading)}
       </Grid.Container>
     </GeistProvider>
   ) : (

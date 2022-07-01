@@ -17,8 +17,6 @@ export const getUrls = async () => {
     Authorization: jwtToken,
   };
 
-  console.log(jwtToken);
-
   const res = await axios.get(URL, { headers });
 
   return res.data;
