@@ -129,23 +129,22 @@ const App = () => {
       {Header()}
 
       <Divider h={1} type="secondary">
-        Temperature
-      </Divider>
-      <Spacer h={1} />
-
-      <Grid.Container gap={2} justify="center">
-        {renderTemp()}
-      </Grid.Container>
-
-      <Spacer h={1} />
-
-      <Divider h={1} type="secondary">
         Live streams
       </Divider>
 
       <Spacer h={1} />
       <Grid.Container gap={2} justify="center">
         {renderStreams()}
+      </Grid.Container>
+      <Spacer h={1} />
+
+      <Divider h={1} type="secondary">
+        Temperature
+      </Divider>
+      <Spacer h={1} />
+
+      <Grid.Container gap={2} justify="center">
+        {renderTemp()}
       </Grid.Container>
     </GeistProvider>
   ) : (
