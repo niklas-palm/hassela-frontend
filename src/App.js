@@ -22,7 +22,7 @@ import awsconfig from "./aws-exports";
 
 import ReactHlsPlayer from "react-hls-player";
 
-import { getUrls } from "./utils/requests";
+import { getUrls, getTempData } from "./utils/requests";
 
 import "./App.scss";
 
@@ -30,6 +30,7 @@ Amplify.configure(awsconfig);
 
 const App = () => {
   const [streams, setStreams] = useState();
+  const [temps, setTemps] = useState();
   const [authState, setAuthState] = useState();
   const [user, setUser] = useState();
 
@@ -46,6 +47,14 @@ const App = () => {
       setStreams(res.streams);
     };
     getStreams();
+  }, []);
+
+  useEffect(() => {
+    const getTemp = async () => {
+      let res = await getTempData();
+      setTemps(res);
+    };
+    getTemp();
   }, []);
 
   const renderStreams = () => {
@@ -85,6 +94,22 @@ const App = () => {
     );
   };
 
+  const renderTemp = () => {
+    if (temps && temps.length > 0) {
+      return temps.map((temp) => {
+        return (
+          <Grid xs={12} md={4} key={temp.room}>
+            <Card width="100%">
+              <Text h4> {temp.room}</Text>
+              <Text p>Temperature: {temp.temp}</Text>
+              <Text p>Humidity: {temp.humidity}</Text>
+            </Card>
+          </Grid>
+        );
+      });
+    }
+  };
+
   const Header = () => {
     return (
       <>
@@ -102,6 +127,17 @@ const App = () => {
       <CssBaseline />
 
       {Header()}
+
+      <Divider h={1} type="secondary">
+        Temperature
+      </Divider>
+      <Spacer h={1} />
+
+      <Grid.Container gap={2} justify="center">
+        {renderTemp()}
+      </Grid.Container>
+
+      <Spacer h={1} />
 
       <Divider h={1} type="secondary">
         Live streams

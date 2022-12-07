@@ -21,3 +21,17 @@ export const getUrls = async () => {
 
   return res.data;
 };
+
+export const getTempData = async () => {
+  const jwtToken = await getJwtToken();
+
+  const URL = "https://hgmaz90m6b.execute-api.eu-west-1.amazonaws.com/Prod";
+
+  const headers = {
+    Authorization: jwtToken,
+  };
+
+  const res = await axios.get(URL, { headers });
+
+  return res.data;
+};
