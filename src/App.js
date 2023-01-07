@@ -103,6 +103,7 @@ const App = () => {
               <Text h4> {temp.room}</Text>
               <Text p>Temperature: {temp.temp}</Text>
               <Text p>Humidity: {temp.humidity}</Text>
+              <Text p>Updated: {temp.timestamp ? temp.timestamp : null}</Text>
             </Card>
           </Grid>
         );
