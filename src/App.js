@@ -97,9 +97,13 @@ const App = () => {
   const renderTemp = () => {
     if (temps && temps.length > 0) {
       return temps.map((temp) => {
+        let formattedDate;
+
         if (temp.timestamp) {
           const date = new Date(temp.timestamp);
-          let formattedDate = date.toLocaleString("sv-SE", {
+          const offset = date.getTimezoneOffset();
+          const localTime = new Date(date.getTime() - offset * 60000);
+          formattedDate = localTime.toLocaleString("sv-SE", {
             day: "numeric",
             month: "numeric",
             hour: "numeric",
