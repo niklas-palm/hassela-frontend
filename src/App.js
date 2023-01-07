@@ -97,13 +97,23 @@ const App = () => {
   const renderTemp = () => {
     if (temps && temps.length > 0) {
       return temps.map((temp) => {
+        if (temp.timestamp) {
+          const date = new Date(temp.timestamp);
+          let formattedDate = date.toLocaleString("sv-SE", {
+            day: "numeric",
+            month: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+          });
+        }
         return (
           <Grid xs={12} md={4} key={temp.room}>
             <Card width="100%">
               <Text h4> {temp.room}</Text>
               <Text p>Temperature: {temp.temp}</Text>
               <Text p>Humidity: {temp.humidity}</Text>
-              <Text p>Updated: {temp.timestamp ? temp.timestamp : null}</Text>
+              <Text p>Updated: {formattedDate ? formattedDate : null}</Text>
             </Card>
           </Grid>
         );
