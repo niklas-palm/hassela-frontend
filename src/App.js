@@ -74,7 +74,6 @@ const App = () => {
   useEffect(() => {
     const getHistory = async () => {
       let res = await getHistoryData();
-      console.log(res);
       setHistory(res);
     };
     getHistory();
@@ -91,7 +90,7 @@ const App = () => {
 
   useEffect(() => {
     if (windowDimensions.width) {
-      let newWidth = Math.max(330, windowDimensions.width * 0.4);
+      let newWidth = Math.max(320, windowDimensions.width * 0.4);
       setChartWidth(newWidth);
     }
   }, [windowDimensions]);
@@ -101,7 +100,7 @@ const App = () => {
     if (streams && streams.length > 0) {
       return streams.map((stream) => {
         return (
-          <Grid xs={24} md={12} key={stream}>
+          <Grid xs={22} md={12} key={stream}>
             <ReactHlsPlayer
               src={stream}
               autoPlay={true}
@@ -132,7 +131,7 @@ const App = () => {
       </Grid>
     );
   };
-  console.log(chartWith);
+
   const renderTemp = () => {
     if (temps && temps.length > 0) {
       return temps.map((temp) => {
@@ -157,39 +156,41 @@ const App = () => {
               <Text p>Temperature: {temp.temp}</Text>
               <Text p>Humidity: {temp.humidity}</Text>
               <Text p>Updated: {formattedDate ? formattedDate : null}</Text>
-              <Text h5>Last 36 hours</Text>
               {history ? (
-                <LineChart
-                  width={chartWith}
-                  height={300}
-                  bottomAxis={null}
-                  series={[
-                    {
-                      data: history[temp.room]["temp"].slice(
-                        history[temp.room]["temp"].length - 36
-                      ),
-                      label: "temp",
-                      yAxisKey: "leftAxisId",
-                    },
-                    {
-                      data: history[temp.room]["humidity"].slice(
-                        history[temp.room]["humidity"].length - 36
-                      ),
-                      label: "humidity",
-                      yAxisKey: "rightAxisId",
-                    },
-                  ]}
-                  xAxis={[
-                    {
-                      scaleType: "point",
-                      data: history[temp.room]["timestamp"].slice(
-                        history[temp.room]["timestamp"].length - 36
-                      ),
-                    },
-                  ]}
-                  yAxis={[{ id: "leftAxisId" }, { id: "rightAxisId" }]}
-                  rightAxis="rightAxisId"
-                />
+                <>
+                  <Text h5>Last 36 hours</Text>
+                  <LineChart
+                    width={chartWith}
+                    height={300}
+                    bottomAxis={null}
+                    series={[
+                      {
+                        data: history[temp.room]["temp"].slice(
+                          history[temp.room]["temp"].length - 36
+                        ),
+                        label: "temp",
+                        yAxisKey: "leftAxisId",
+                      },
+                      {
+                        data: history[temp.room]["humidity"].slice(
+                          history[temp.room]["humidity"].length - 36
+                        ),
+                        label: "humidity",
+                        yAxisKey: "rightAxisId",
+                      },
+                    ]}
+                    xAxis={[
+                      {
+                        scaleType: "point",
+                        data: history[temp.room]["timestamp"].slice(
+                          history[temp.room]["timestamp"].length - 36
+                        ),
+                      },
+                    ]}
+                    yAxis={[{ id: "leftAxisId" }, { id: "rightAxisId" }]}
+                    rightAxis="rightAxisId"
+                  />
+                </>
               ) : null}
             </Card>
           </Grid>
