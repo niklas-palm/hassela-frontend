@@ -30,6 +30,23 @@ export const getTempData = async () => {
   const headers = {
     Authorization: jwtToken,
   };
+  console.log("getTempData");
+
+  const res = await axios.get(URL, { headers });
+
+  return res.data;
+};
+
+export const getHistoryData = async () => {
+  const jwtToken = await getJwtToken();
+
+  const URL =
+    "https://hgmaz90m6b.execute-api.eu-west-1.amazonaws.com/Prod/history";
+
+  const headers = {
+    Authorization: jwtToken,
+  };
+  console.log("getHistoryData");
 
   const res = await axios.get(URL, { headers });
 

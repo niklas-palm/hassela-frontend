@@ -9,6 +9,7 @@ import {
   Divider,
   Spacer,
 } from "@geist-ui/core";
+import { LineChart } from "@mui/x-charts/LineChart";
 import { Amplify } from "aws-amplify";
 import {
   AmplifyAuthenticator,
@@ -22,17 +23,30 @@ import awsconfig from "./aws-exports";
 
 import ReactHlsPlayer from "react-hls-player";
 
-import { getUrls, getTempData } from "./utils/requests";
+import { getUrls, getTempData, getHistoryData } from "./utils/requests";
 
 import "./App.scss";
 
 Amplify.configure(awsconfig);
+
+const getWindowDimensions = () => {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height,
+  };
+};
 
 const App = () => {
   const [streams, setStreams] = useState();
   const [temps, setTemps] = useState();
   const [authState, setAuthState] = useState();
   const [user, setUser] = useState();
+  const [history, setHistory] = useState();
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  );
+  const [chartWith, setChartWidth] = useState(350);
 
   useEffect(() => {
     onAuthUIStateChange((nextAuthState, authData) => {
@@ -56,6 +70,31 @@ const App = () => {
     };
     getTemp();
   }, []);
+
+  useEffect(() => {
+    const getHistory = async () => {
+      let res = await getHistoryData();
+      console.log(res);
+      setHistory(res);
+    };
+    getHistory();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowDimensions(getWindowDimensions());
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (windowDimensions.width) {
+      let newWidth = Math.max(330, windowDimensions.width * 0.4);
+      setChartWidth(newWidth);
+    }
+  }, [windowDimensions]);
 
   const renderStreams = () => {
     // Not laoding, and we recived an HLS stream from backend
@@ -93,7 +132,7 @@ const App = () => {
       </Grid>
     );
   };
-
+  console.log(chartWith);
   const renderTemp = () => {
     if (temps && temps.length > 0) {
       return temps.map((temp) => {
@@ -112,12 +151,46 @@ const App = () => {
           });
         }
         return (
-          <Grid xs={12} md={4} key={temp.room}>
+          <Grid key={temp.room}>
             <Card width="100%">
               <Text h4> {temp.room}</Text>
               <Text p>Temperature: {temp.temp}</Text>
               <Text p>Humidity: {temp.humidity}</Text>
               <Text p>Updated: {formattedDate ? formattedDate : null}</Text>
+              <Text h5>Last 36 hours</Text>
+              {history ? (
+                <LineChart
+                  width={chartWith}
+                  height={300}
+                  bottomAxis={null}
+                  series={[
+                    {
+                      data: history[temp.room]["temp"].slice(
+                        history[temp.room]["temp"].length - 36
+                      ),
+                      label: "temp",
+                      yAxisKey: "leftAxisId",
+                    },
+                    {
+                      data: history[temp.room]["humidity"].slice(
+                        history[temp.room]["humidity"].length - 36
+                      ),
+                      label: "humidity",
+                      yAxisKey: "rightAxisId",
+                    },
+                  ]}
+                  xAxis={[
+                    {
+                      scaleType: "point",
+                      data: history[temp.room]["timestamp"].slice(
+                        history[temp.room]["timestamp"].length - 36
+                      ),
+                    },
+                  ]}
+                  yAxis={[{ id: "leftAxisId" }, { id: "rightAxisId" }]}
+                  rightAxis="rightAxisId"
+                />
+              ) : null}
             </Card>
           </Grid>
         );

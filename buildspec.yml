@@ -24,7 +24,7 @@ phases:
         export default endpoint;" >> src/endpoint.js
 
       - echo Installing source npm dependencies ...
-      - npm ci
+      - npm ci --force
 
   build:
     commands:
@@ -34,7 +34,7 @@ phases:
     commands:
       # - echo Build complete. Deleting current contents of the S3 bucket ...
       # npm creates new files with different names in each build, and only files with the same name
-      # are overwritten in the deploy. To avoid bloating the bucket, we can delete everything before 
+      # are overwritten in the deploy. To avoid bloating the bucket, we can delete everything before
       # deploying.
 
       # - aws s3 rm s3://${HOSTING_BUCKET} --recursive
