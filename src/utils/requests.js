@@ -30,7 +30,6 @@ export const getTempData = async () => {
   const headers = {
     Authorization: jwtToken,
   };
-  console.log("getTempData");
 
   const res = await axios.get(URL, { headers });
 
@@ -46,7 +45,6 @@ export const getHistoryData = async () => {
   const headers = {
     Authorization: jwtToken,
   };
-  console.log("getHistoryData");
 
   const res = await axios.get(URL, { headers });
 

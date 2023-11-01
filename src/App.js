@@ -42,7 +42,7 @@ const App = () => {
   const [temps, setTemps] = useState();
   const [authState, setAuthState] = useState();
   const [user, setUser] = useState();
-  const [history, setHistory] = useState();
+  const [history, setHistory] = useState({});
   const [windowDimensions, setWindowDimensions] = useState(
     getWindowDimensions()
   );
@@ -156,7 +156,7 @@ const App = () => {
               <Text p>Temperature: {temp.temp}</Text>
               <Text p>Humidity: {temp.humidity}</Text>
               <Text p>Updated: {formattedDate ? formattedDate : null}</Text>
-              {history ? (
+              {Object.keys(history).length > 0 ? (
                 <>
                   <Text h5>Last 36 hours</Text>
                   <LineChart
