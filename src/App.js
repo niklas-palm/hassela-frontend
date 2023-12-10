@@ -74,6 +74,7 @@ const App = () => {
   useEffect(() => {
     const getHistory = async () => {
       let res = await getHistoryData();
+      console.log(res);
       setHistory(res);
     };
     getHistory();
@@ -156,7 +157,7 @@ const App = () => {
               <Text p>Temperature: {temp.temp}</Text>
               <Text p>Humidity: {temp.humidity}</Text>
               <Text p>Updated: {formattedDate ? formattedDate : null}</Text>
-              {Object.keys(history).length > 0 ? (
+              {Object.keys(history).length > 1 ? (
                 <>
                   <Text h5>Last 36 hours</Text>
                   <LineChart
